@@ -8,13 +8,14 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "preinstall": "npm install -g @angular/cli @angular/compiler-cli typescript",
+    "preinstall": "npm install -g @angular/cli @angular/compiler @angular/compiler-cli typescript",
     "postinstall": "ng build --prod"
   },
   "private": true,
   "dependencies": {
     "@angular-devkit/build-angular": "~12.1.2",
     "@angular/cli": "~12.1.2",
+	"@angular/compiler":  "~12.1.2",
     "@angular/compiler-cli": "~12.1.2",
     "@types/jasmine": "~3.8.0",
     "@types/node": "^12.11.1",
