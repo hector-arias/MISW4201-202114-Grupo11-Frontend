@@ -2,13 +2,14 @@
   "name": "tutorial-canciones",
   "version": "0.0.0",
   "scripts": {
-   "ng": "ng",
+    "ng": "ng",
     "start": "node server.js",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "preinstall": "npm install -g @angular/cli @angular/compiler-cli typescript"
+    "preinstall": "npm install -g @angular/cli @angular/compiler-cli typescript",
+    "postinstall": "ng build --prod"
   },
   "private": true,
   "dependencies": {
