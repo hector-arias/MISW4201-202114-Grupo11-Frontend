@@ -4,7 +4,7 @@ import {UsuarioLista} from "../usuario";
 import {ToastrService} from "ngx-toastr";
 import {ActivatedRoute, Router} from "@angular/router";
 import {CancionService} from "../../cancion/cancion.service";
-import {CancionCompartida} from "../../cancion/cancion";
+import {AlbumCompartido, CancionCompartida} from "../../cancion/cancion";
 import {Location} from '@angular/common';
 import {AlbumService} from "../../album/album.service";
 
@@ -36,7 +36,7 @@ export class UsuarioListComponent implements OnInit {
       this.token = this.router.snapshot.params.userToken;
       this.labelMedio = this.router.snapshot.params.medioLabel;
       this.idMedio = this.router.snapshot.params.medioId;
-      this.labelMedio === "canciones" ? this.labelRoute = "canciones" : this.labelRoute = "albumes";
+      this.labelMedio === "cancion" ? this.labelRoute = "canciones" : this.labelRoute = "albumes";
       this.showUsers();
     }
   }
@@ -46,7 +46,8 @@ export class UsuarioListComponent implements OnInit {
   }
 
   showUsers() {
-    this.usuarioService.usersList(this.token, this.idMedio)
+
+    this.usuarioService.usersList(this.token, this.idMedio, this.labelRoute)
       .subscribe(res => {
           this.listaUsuariosB = res;
           this.listaUsuarios = res;
@@ -57,8 +58,8 @@ export class UsuarioListComponent implements OnInit {
     this.buscarMedio();
   }
 
-  listar() {
-    this.labelMedio == "cancion" ? this.compartirCancion() : this.compartirAlbum;
+  compartir() {
+    this.labelMedio == "cancion" ? this.compartirCancion() : this.compartirAlbum();
   }
 
   showSuccess() {
@@ -74,8 +75,17 @@ export class UsuarioListComponent implements OnInit {
   }
 
   compartirAlbum() {
-    console.log("Compartiendo Album")
+    let albumCompartido = new AlbumCompartido(this.idMedio, this.listaUsuarios.filter(s => s.checked == true).map(s => s.id.toString()));
+    this.albumService.compartirAlbum(albumCompartido, parseInt(this.idUsuario), this.token)
+      .subscribe(res => {
+          this.showSuccess()
+          this.routerPath.navigate([`/albumes/${this.idUsuario}/${this.token}`])
+        },
+        error => {
+          this.mostrarError(error)
+        })
   }
+
 
   buscarUsuario(busqueda: string) {
     let usuarioBusqueda: Array<UsuarioLista> = []
@@ -100,11 +110,9 @@ export class UsuarioListComponent implements OnInit {
   }
 
   buscarMedio() {
-    console.log(this.idMedio)
     if (this.labelMedio == "cancion") {
       this.cancionService.getCancion(parseInt(this.idMedio))
         .subscribe(res => {
-            console.log(res)
             this.titulo = res.titulo
           },
           error => {

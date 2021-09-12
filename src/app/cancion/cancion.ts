@@ -37,3 +37,16 @@ export class CancionCompartida {
       this.id_Usuario = idUsuario
   }
 }
+
+export class AlbumCompartido {
+  id_Album: string;
+  id_Usuario: Array<any>
+
+  constructor(
+    id_Album: string,
+    idUsuario: Array<any>
+  ){
+    this.id_Album = id_Album,
+      this.id_Usuario = idUsuario
+  }
+}

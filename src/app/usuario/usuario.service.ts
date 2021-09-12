@@ -8,7 +8,7 @@ import {Usuario, UsuarioLista} from "./usuario";
   })
 export class UsuarioService {
 
-    private backUrl: string = "http://localhost:5000"
+    private backUrl: string = "https://misw4201-equipo-11-backend.herokuapp.com"
 
     constructor(private http: HttpClient) { }
 
@@ -20,10 +20,11 @@ export class UsuarioService {
         return this.http.post<any>(`${this.backUrl}/signin`, {"nombre": nombre, "contrasena": contrasena})
     }
 
-  usersList(token: string, id: string): Observable<UsuarioLista[]>{
+  usersList(token: string, id: string, labelMedio: string): Observable<UsuarioLista[]>{
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`
     })
-    return this.http.get<any>(`${this.backUrl}/usuarios/${id}`,{headers: headers});
+    console.log("Va a compartir"+labelMedio);
+    return this.http.get<any>(`${this.backUrl}/usuarios/${id}/${labelMedio}`,{headers: headers});
   }
 }
