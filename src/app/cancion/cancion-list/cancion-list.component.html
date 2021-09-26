@@ -14,25 +14,25 @@
             </div>
           </div>
           <div class="card-body">
-  
+
             <div class="input-group my-2">
-              <input #busqueda type="search" class="form-control" placeholder="Buscar canciones" aria-label="Search" (keyup)="buscarCancion(busqueda.value)">
+              <input maxlength="30" #busqueda type="search" class="form-control" placeholder="Buscar canciones" aria-label="Search" (keyup)="buscarCancion(busqueda.value)">
             </div>
-  
             <table class="table table-hover mb-0" aria-describedby="colecName">
               <tbody>
                   <tr *ngFor="let cancion of mostrarCanciones; index as i" (click)="onSelect(cancion, i)" [ngClass]="{'selected': i === indiceSeleccionado}">
-                    <td>{{cancion.titulo}}</td>
-                    <td>{{cancion.minutos}}:{{cancion.segundos}}</td>
+                    <td style="width:70%">{{cancion.titulo}}</td>
+                    <td *ngIf="cancion.titulo != 'No existen resultados' " style="width:20%">{{cancion.minutos}}:{{cancion.segundos}}</td>
+                    <td style="width:10%" ><i style="color:#0D6EFD" *ngIf="cancion.favorita== 1" class="bi bi-star-fill"></i></td>
                   </tr>
               </tbody>
             </table>
-            
+
           </div>
         </div>
       </div>
       <div class="col-8">
-        <app-cancion-detail (deleteCancion)="eliminarCancion()" [cancion]="cancionSeleccionada"></app-cancion-detail>
+        <app-cancion-detail (deleteCancion)="eliminarCancion()" (favoriteSong)="cancionFavorita()" [cancion]="cancionSeleccionada"></app-cancion-detail>
       </div>
     </div>
   </div>

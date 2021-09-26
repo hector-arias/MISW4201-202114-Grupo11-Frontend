@@ -11,6 +11,7 @@ export class CancionDetailComponent implements OnInit {
 
   @Input() cancion: Cancion;
   @Output() deleteCancion = new EventEmitter();
+  @Output() favoriteSong = new EventEmitter();
 
   userId: number;
   token: string;
@@ -20,10 +21,9 @@ export class CancionDetailComponent implements OnInit {
     private routerPath: Router
   ) { }
 
-  ngOnInit() {
+  ngOnInit() {    
     this.userId = parseInt(this.router.snapshot.params.userId)
     this.token = this.router.snapshot.params.userToken
-
   }
 
   eliminarCancion(){
@@ -36,5 +36,9 @@ export class CancionDetailComponent implements OnInit {
 
   goToShareCancion(){
     this.routerPath.navigate([`/usuariosList/cancion/${this.cancion.id}/${this.userId}/${this.token}`])
+  }
+
+  cancionFavorita(){
+    this.favoriteSong.emit(this.cancion.id)
   }
 }

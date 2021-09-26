@@ -9,7 +9,7 @@ import { Album } from '../album/album';
 })
 export class CancionService {
 
-  private backUrl: string = "https://misw4201-equipo-11-backend.herokuapp.com"
+  private backUrl: string = "http://localhost:5000"
 
   constructor(private http: HttpClient) { }
 
@@ -50,4 +50,12 @@ export class CancionService {
     })
     return this.http.post<Cancion>(`${this.backUrl}/canciones/usuarios`, {"id_cancion":infoCompartida.id_Cancion,"id_usuario":infoCompartida.id_Usuario})
   }
+
+  cancionFavorita(cancionId: number, favorita: number, token:string): Observable<Cancion>{
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    })
+    return this.http.put<Cancion>(`${this.backUrl}/cancion-favorita/${cancionId}`,{"favorita":favorita},{headers:headers})
+  }
+
 }

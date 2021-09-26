@@ -23,6 +23,7 @@ export class CancionListComponent implements OnInit {
   canciones: Array<Cancion>
   mostrarCanciones: Array<Cancion>
   cancionSeleccionada: Cancion
+  cancionFinal: any[] = [];
   indiceSeleccionado: number = 0
 
   ngOnInit() {
@@ -40,6 +41,7 @@ export class CancionListComponent implements OnInit {
     this.cancionService.getCanciones(this.userId)
     .subscribe(canciones => {
       this.canciones = canciones
+      this.canciones=this.canciones.sort((a, b) => (a.favorita < b.favorita) ? 1 : -1)
       this.mostrarCanciones = canciones
       this.onSelect(this.mostrarCanciones[0], 0)
     })
@@ -55,17 +57,50 @@ export class CancionListComponent implements OnInit {
     error => {
       this.showError(`Ha ocurrido un error: ${error.message}`)
     })
-    
+
   }
 
   buscarCancion(busqueda: string){
     let cancionesBusqueda: Array<Cancion> = []
+    let cancionesBusquedaFinal: Array<Cancion> = []
+    let buscar: any;
+    this.cancionFinal = []
     this.canciones.map( cancion => {
-      if(cancion.titulo.toLocaleLowerCase().includes(busqueda.toLocaleLowerCase())){
-        cancionesBusqueda.push(cancion)
+
+      if(cancion.titulo.toLocaleLowerCase().includes(busqueda.toLocaleLowerCase())
+      || cancion.interprete.toLocaleLowerCase().includes(busqueda.toLocaleLowerCase())
+      || cancion.genero?.llave.toLocaleLowerCase().includes(busqueda.toLocaleLowerCase())){
+
+        cancionesBusqueda.push(cancion);
+        cancionesBusqueda.forEach(element => {
+
+          buscar = this.cancionFinal.find(
+            (x) => x.titulo == element.titulo
+          );
+          
+          if(buscar == undefined){
+            this.cancionFinal.push(cancion)
+          }
+        });
+
       }
     })
-    this.mostrarCanciones = cancionesBusqueda
+
+    this.mostrarCanciones = [];
+    if(this.cancionFinal.length == 0){
+      this.cancionFinal.push({
+        "id": 1,
+        "titulo": "No existen resultados",
+        "minutos": null,
+        "segundos": null,
+        "interprete": "",
+        "usuario": 2,
+        "albumes": [],
+        "favorita": 0,
+        "genero": {"llave": "2"}
+      })
+    }
+    this.mostrarCanciones = this.cancionFinal
   }
 
   eliminarCancion(){
@@ -90,5 +125,32 @@ export class CancionListComponent implements OnInit {
   showSuccess() {
     this.toastr.success(`La canción fue eliminada`, "Eliminada exitosamente");
   }
+
+  cancionFavorita(){
+    console.log(this.cancionSeleccionada)
+    var newCancion= this.cancionSeleccionada
+
+    if(newCancion.favorita == 0){
+      newCancion.favorita = 1
+    }else{
+      newCancion.favorita = 0
+    }
+
+    this.cancionService.cancionFavorita(newCancion.id,newCancion.favorita,this.token)
+    .subscribe(cancion => {
+      this.routerPath.navigate([`/canciones/${this.userId}/${this.token}`])
+        this.getCanciones()
+    },
+    error=> {
+      if(error.statusText === "UNPROCESSABLE ENTITY"){
+        this.showError("No hemos podido identificarlo, por favor vuelva a iniciar sesión.")
+      }
+      else{
+        this.showError("Ha ocurrido un error. " + error.message)
+      }
+    })
+
+  }
+
 
 }

@@ -1,11 +1,13 @@
 export class Cancion {
     id: number;
     titulo: string;
-    minutos: number;
-    segundos: number;
+    minutos: number | null;
+    segundos: number | null;
     interprete: string;
     usuario: number;
-    albumes: Array<any>
+    albumes: Array<any>;
+    favorita: number;
+    genero: Generos;
 
     constructor(
         id: number,
@@ -14,7 +16,8 @@ export class Cancion {
         segundos: number,
         interprete: string,
         usuario: number,
-        albumes: Array<any>
+        albumes: Array<any>,
+        favorita: number
     ){
         this.id = id,
         this.titulo = titulo,
@@ -22,12 +25,13 @@ export class Cancion {
         this.segundos = segundos,
         this.interprete = interprete,
         this.usuario = usuario,
-        this.albumes = albumes
+        this.albumes = albumes,
+        this.favorita = favorita
     }
 }
 export class CancionCompartida {
   id_Cancion: string;
-  id_Usuario: Array<any>
+  id_Usuario: Array<any>;
 
   constructor(
     idCancion: string,
@@ -50,3 +54,11 @@ export class AlbumCompartido {
       this.id_Usuario = idUsuario
   }
 }
+
+export class Generos{
+  llave: string;
+  constructor(llave: string){
+    this.llave = llave
+  }
+}
+
