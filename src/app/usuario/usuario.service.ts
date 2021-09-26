@@ -8,7 +8,7 @@ import {Usuario, UsuarioLista} from "./usuario";
   })
 export class UsuarioService {
 
-    private backUrl: string = "http://localhost:5000"
+    private backUrl: string = "https://misw4201-equipo-11-backend.herokuapp.com"
 
     constructor(private http: HttpClient) { }
 
